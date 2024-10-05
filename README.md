@@ -3,7 +3,7 @@ By: Raktbastr101
 
 This bash script automates the creation of a Minecraft Java Server, either being Creative or Survival!
 
-Runs on MacOS and Linux
+Runs on MacOS and Linux.
 Batch script not coming, because batch is hard to work with :( just use WSL if you are on windows.
 
 What the script does:
