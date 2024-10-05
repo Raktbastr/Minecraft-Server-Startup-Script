@@ -10,10 +10,6 @@ read -rp "Enter PC Username: " specuser
 
 sleep 1
 
-
-# I know most of the code is wrongly indented, i wrote it before i realized this needed mac support
-# and added the $unameOut if statement. It works anyway!
-
 unameOut="$(uname -s)"
 if [ "$unameOut" = Linux ] ;then
     read -rp "Do you want this script to install needed packages (tmux, java)? (y,n) " installpacks
@@ -25,6 +21,7 @@ if [ "$unameOut" = Linux ] ;then
         fi
         echo What package manager?
         echo 1. Apt
+        # TWENTY EIGHT LINES. Didnt want to give him a chance huh?
         echo 2. Pacman
         echo 3. Install tar.gz files and install outside of script
         read -rp "Package manager: " packagemanager
@@ -107,12 +104,73 @@ if [ "$unameOut" = Linux ] ;then
         if [ "$serverbase" = 2 ] ;then
             curl -o server.jar https://api.papermc.io/v2/projects/paper/versions/1.21.1/builds/119/downloads/paper-1.21.1-119.jar
             curl -o server.properties https://raw.githubusercontent.com/Raktbastr/Server-Configs/refs/heads/main/papersurvivalserver.properties
+            read -rp "How many plugins do you want to add? (0-5)" pluginnumber
+            case $pluginnumber in
+                0)
+                    echo '0 plugins selected!'
+                    ;;
+                1)
+                    mkdir ./plugins
+                    cd ./plugins || exit
+                    read -rp "Link Number 1: " link1
+                    curl -O "$link1"
+                    cd ..
+                    ;;
+                2)
+                    mkdir ./plugins
+                    cd ./plugins || exit
+                    read -rp "Link Number 1: " link1
+                    curl -O "$link1"
+                    read -rp "Link Number 2: " link2
+                    curl -O "$link2"
+                    cd ..
+                    ;;
+                3)
+                    mkdir ./plugins
+                    cd ./plugins || exit
+                    read -rp "Link Number 1: " link1
+                    curl -O "$link1"
+                    read -rp "Link Number 2: " link2
+                    curl -O "$link2"
+                    read -rp "Link Number 3: " link3
+                    curl -O "$link3"
+                    cd ..
+                    ;;
+                4)
+                    mkdir ./plugins
+                    cd ./plugins || exit
+                    read -rp "Link Number 1: " link1
+                    curl -O "$link1"
+                    read -rp "Link Number 2: " link2
+                    curl -O "$link2"
+                    read -rp "Link Number 3: " link3
+                    curl -O "$link3"
+                    read -rp "Link Number 4: " link4
+                    curl -O "$link4"
+                    cd ..
+                    ;;
+                5)
+                    mkdir ./plugins
+                    cd ./plugins || exit
+                    read -rp "Link Number 1: " link1
+                    curl -O "$link1"
+                    read -rp "Link Number 2: " link2
+                    curl -O "$link2"
+                    read -rp "Link Number 3: " link3
+                    curl -O "$link3"
+                    read -rp "Link Number 4: " link4
+                    curl -O "$link4"
+                    read -rp "Link Number 5: " link5
+                    curl -O "$link5"
+                    cd ..
+                    ;;
+            esac  
         fi
 
         echo Creating EULA file..
         sleep 2
         touch eula.txt
-        echo Accepting Eula File..
+        echo Accepting EULA File..
         sleep 2
         printf "eula=true" >> eula.txt
 
@@ -147,12 +205,73 @@ if [ "$unameOut" = Linux ] ;then
         if [ "$serverbase" = 2 ] ;then
             curl -o server.jar https://api.papermc.io/v2/projects/paper/versions/1.21.1/builds/119/downloads/paper-1.21.1-119.jar
             curl -o server.properties https://raw.githubusercontent.com/Raktbastr/Server-Configs/refs/heads/main/papercreativeserver.properties
+            read -rp "How many plugins do you want to add? (0-5)" pluginnumber
+            case $pluginnumber in
+                0)
+                    echo '0 plugins selected!'
+                    ;;
+                1)
+                    mkdir ./plugins
+                    cd ./plugins || exit
+                    read -rp "Link Number 1: " link1
+                    curl -O "$link1"
+                    cd ..
+                    ;;
+                2)
+                    mkdir ./plugins
+                    cd ./plugins || exit
+                    read -rp "Link Number 1: " link1
+                    curl -O "$link1"
+                    read -rp "Link Number 2: " link2
+                    curl -O "$link2"
+                    cd ..
+                    ;;
+                3)
+                    mkdir ./plugins
+                    cd ./plugins || exit
+                    read -rp "Link Number 1: " link1
+                    curl -O "$link1"
+                    read -rp "Link Number 2: " link2
+                    curl -O "$link2"
+                    read -rp "Link Number 3: " link3
+                    curl -O "$link3"
+                    cd ..
+                    ;;
+                4)
+                    mkdir ./plugins
+                    cd ./plugins || exit
+                    read -rp "Link Number 1: " link1
+                    curl -O "$link1"
+                    read -rp "Link Number 2: " link2
+                    curl -O "$link2"
+                    read -rp "Link Number 3: " link3
+                    curl -O "$link3"
+                    read -rp "Link Number 4: " link4
+                    curl -O "$link4"
+                    cd ..
+                    ;;
+                5)
+                    mkdir ./plugins
+                    cd ./plugins || exit
+                    read -rp "Link Number 1: " link1
+                    curl -O "$link1"
+                    read -rp "Link Number 2: " link2
+                    curl -O "$link2"
+                    read -rp "Link Number 3: " link3
+                    curl -O "$link3"
+                    read -rp "Link Number 4: " link4
+                    curl -O "$link4"
+                    read -rp "Link Number 5: " link5
+                    curl -O "$link5"
+                    cd ..
+                    ;;
+            esac
         fi
         
         echo Creating EULA file..
         sleep 2
         touch eula.txt
-        echo Accepting Eula File..
+        echo Accepting EULA File..
         sleep 2
         printf "eula=true" >> eula.txt
 
@@ -248,6 +367,67 @@ if [ "$unameOut" = Darwin ] ;then
         if [ "$serverbase" = 2 ] ;then
             curl -o server.jar https://api.papermc.io/v2/projects/paper/versions/1.21.1/builds/119/downloads/paper-1.21.1-119.jar
             curl -o server.properties https://raw.githubusercontent.com/Raktbastr/Server-Configs/refs/heads/main/papersurvivalserver.properties
+            read -rp "How many plugins do you want to add? (0-5)" pluginnumber
+            case $pluginnumber in
+                0)
+                    echo '0 plugins selected!'
+                    ;;
+                1)
+                    mkdir ./plugins
+                    cd ./plugins || exit
+                    read -rp "Link Number 1: " link1
+                    curl -O "$link1"
+                    cd ..
+                    ;;
+                2)
+                    mkdir ./plugins
+                    cd ./plugins || exit
+                    read -rp "Link Number 1: " link1
+                    curl -O "$link1"
+                    read -rp "Link Number 2: " link2
+                    curl -O "$link2"
+                    cd ..
+                    ;;
+                3)
+                    mkdir ./plugins
+                    cd ./plugins || exit
+                    read -rp "Link Number 1: " link1
+                    curl -O "$link1"
+                    read -rp "Link Number 2: " link2
+                    curl -O "$link2"
+                    read -rp "Link Number 3: " link3
+                    curl -O "$link3"
+                    cd ..
+                    ;;
+                4)
+                    mkdir ./plugins
+                    cd ./plugins || exit
+                    read -rp "Link Number 1: " link1
+                    curl -O "$link1"
+                    read -rp "Link Number 2: " link2
+                    curl -O "$link2"
+                    read -rp "Link Number 3: " link3
+                    curl -O "$link3"
+                    read -rp "Link Number 4: " link4
+                    curl -O "$link4"
+                    cd ..
+                    ;;
+                5)
+                    mkdir ./plugins
+                    cd ./plugins || exit
+                    read -rp "Link Number 1: " link1
+                    curl -O "$link1"
+                    read -rp "Link Number 2: " link2
+                    curl -O "$link2"
+                    read -rp "Link Number 3: " link3
+                    curl -O "$link3"
+                    read -rp "Link Number 4: " link4
+                    curl -O "$link4"
+                    read -rp "Link Number 5: " link5
+                    curl -O "$link5"
+                    cd ..
+                    ;;
+            esac
         fi
 
         curl -o server.properties https://raw.githubusercontent.com/Raktbastr/Server-Configs/refs/heads/main/survivalserver.properties
@@ -255,7 +435,7 @@ if [ "$unameOut" = Darwin ] ;then
         echo Creating EULA file..
         sleep 2
         touch eula.txt
-        echo Accepting Eula File..
+        echo Accepting EULA File..
         sleep 2
         printf "eula=true" >> eula.txt
 
@@ -290,12 +470,74 @@ if [ "$unameOut" = Darwin ] ;then
         if [ "$serverbase" = 2 ] ;then
             curl -o server.jar https://api.papermc.io/v2/projects/paper/versions/1.21.1/builds/119/downloads/paper-1.21.1-119.jar
             curl -o server.properties https://raw.githubusercontent.com/Raktbastr/Server-Configs/refs/heads/main/papercreativeserver.properties
+            read -rp "How many plugins do you want to add? (0-5)" pluginnumber
+            case $pluginnumber in
+                0)
+                    echo '0 plugins selected!'
+                    ;;
+                1)
+                    mkdir ./plugins
+                    cd ./plugins || exit
+                    read -rp "Link Number 1: " link1
+                    curl -O "$link1"
+                    cd ..
+                    ;;
+                2)
+                    mkdir ./plugins
+                    cd ./plugins || exit
+                    read -rp "Link Number 1: " link1
+                    curl -O "$link1"
+                    read -rp "Link Number 2: " link2
+                    curl -O "$link2"
+                    cd ..
+                    ;;
+                3)
+                    mkdir ./plugins
+                    # Five. Hundred. Lines.
+                    cd ./plugins || exit
+                    read -rp "Link Number 1: " link1
+                    curl -O "$link1"
+                    read -rp "Link Number 2: " link2
+                    curl -O "$link2"
+                    read -rp "Link Number 3: " link3
+                    curl -O "$link3"
+                    cd ..
+                    ;;
+                4)
+                    mkdir ./plugins
+                    cd ./plugins || exit
+                    read -rp "Link Number 1: " link1
+                    curl -O "$link1"
+                    read -rp "Link Number 2: " link2
+                    curl -O "$link2"
+                    read -rp "Link Number 3: " link3
+                    curl -O "$link3"
+                    read -rp "Link Number 4: " link4
+                    curl -O "$link4"
+                    cd ..
+                    ;;
+                5)
+                    mkdir ./plugins
+                    cd ./plugins || exit
+                    read -rp "Link Number 1: " link1
+                    curl -O "$link1"
+                    read -rp "Link Number 2: " link2
+                    curl -O "$link2"
+                    read -rp "Link Number 3: " link3
+                    curl -O "$link3"
+                    read -rp "Link Number 4: " link4
+                    curl -O "$link4"
+                    read -rp "Link Number 5: " link5
+                    curl -O "$link5"
+                    cd ..
+                    ;;
+            esac
         fi
         
         echo Creating EULA file..
         sleep 2
         touch eula.txt
-        echo Accepting Eula File..
+        echo Accepting EULA File..
         sleep 2
         printf "eula=true" >> eula.txt
 
