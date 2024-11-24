@@ -10,8 +10,13 @@ read -rp "Enter PC Username: " specuser
 
 sleep 1
 
+
+# I know most of the code is wrongly indented, i wrote it before i realized this needed mac support
+# and added the $unameOut if statement. It works anyway!
+
 unameOut="$(uname -s)"
 if [ "$unameOut" = Linux ] ;then
+    homedir=home
     read -rp "Do you want this script to install needed packages (tmux, java)? (y,n) " installpacks
     if [ "$installpacks" = y ] ;then
         # shellcheck disable=SC2046
@@ -21,9 +26,8 @@ if [ "$unameOut" = Linux ] ;then
         fi
         echo What package manager?
         echo 1. Apt
-        # TWENTY EIGHT LINES. Didnt want to give him a chance huh?
         echo 2. Pacman
-        echo 3. Install tar.gz files and install outside of script
+        echo 3. Download tar.gz files and install outside of script
         read -rp "Package manager: " packagemanager
 
         if [ "$packagemanager" = 1 ] ;then
@@ -52,254 +56,10 @@ if [ "$unameOut" = Linux ] ;then
         fi
 
     fi
-
-    echo Where would you like to create server folder?
-    echo 1. Home Directory
-    echo 2. Documents Directory
-    echo 3. Custom path from /
-
-    read -rp "Server Folder Directory: " serverdirectory
-
-    if [ "$serverdirectory" = 1 ] ;then
-        cd /home/"$specuser" || exit
-        mkdir ./ServerFiles
-        serverpath=/home/$specuser/ServerFiles
-        cd "$serverpath" || exit
-    fi
-    if [ "$serverdirectory" = 2 ] ;then
-        cd /home/"$specuser"/Documents || exit
-        mkdir ./ServerFiles
-        serverpath=/home/$specuser/Documents/ServerFiles
-        cd "$serverpath" || exit
-    fi
-    if [ "$serverdirectory" = 3 ] ;then
-        read -rp "Input Path: " custompath
-        cd "$custompath" || exit
-        mkdir ./ServerFiles
-        serverpath=$custompath/ServerFiles
-        cd "$serverpath" || exit
-    fi
-
-    echo What Kind of Server Would You Like?
-    echo 1. Survival
-    echo 2. Creative
-
-    read -rp "Type of Server: " servertype
-
-    if [ "$servertype" = 1 ] ;then
-        echo Creating Survival Server...
-        echo !Port Will Be 25565!
-        mkdir "$serverpath"/Survival
-        cd "$serverpath"/Survival || exit
-        echo What Server Base?
-        echo 1. Vanilla
-        echo 2. Paper
-
-        read -rp "Server Base: " serverbase
-
-        if [ "$serverbase" = 1 ] ;then
-            curl -o server.jar https://piston-data.mojang.com/v1/objects/59353fb40c36d304f2035d51e7d6e6baa98dc05c/server.jar
-            curl -o server.properties https://raw.githubusercontent.com/Raktbastr/Server-Configs/refs/heads/main/survivalserver.properties
-        fi
-        if [ "$serverbase" = 2 ] ;then
-            curl -o server.jar https://api.papermc.io/v2/projects/paper/versions/1.21.1/builds/119/downloads/paper-1.21.1-119.jar
-            curl -o server.properties https://raw.githubusercontent.com/Raktbastr/Server-Configs/refs/heads/main/papersurvivalserver.properties
-            read -rp "How many plugins do you want to add? (0-5)" pluginnumber
-            case $pluginnumber in
-                0)
-                    echo '0 plugins selected!'
-                    ;;
-                1)
-                    mkdir ./plugins
-                    cd ./plugins || exit
-                    read -rp "Link Number 1: " link1
-                    curl -O "$link1"
-                    cd ..
-                    ;;
-                2)
-                    mkdir ./plugins
-                    cd ./plugins || exit
-                    read -rp "Link Number 1: " link1
-                    curl -O "$link1"
-                    read -rp "Link Number 2: " link2
-                    curl -O "$link2"
-                    cd ..
-                    ;;
-                3)
-                    mkdir ./plugins
-                    cd ./plugins || exit
-                    read -rp "Link Number 1: " link1
-                    curl -O "$link1"
-                    read -rp "Link Number 2: " link2
-                    curl -O "$link2"
-                    read -rp "Link Number 3: " link3
-                    curl -O "$link3"
-                    cd ..
-                    ;;
-                4)
-                    mkdir ./plugins
-                    cd ./plugins || exit
-                    read -rp "Link Number 1: " link1
-                    curl -O "$link1"
-                    read -rp "Link Number 2: " link2
-                    curl -O "$link2"
-                    read -rp "Link Number 3: " link3
-                    curl -O "$link3"
-                    read -rp "Link Number 4: " link4
-                    curl -O "$link4"
-                    cd ..
-                    ;;
-                5)
-                    mkdir ./plugins
-                    cd ./plugins || exit
-                    read -rp "Link Number 1: " link1
-                    curl -O "$link1"
-                    read -rp "Link Number 2: " link2
-                    curl -O "$link2"
-                    read -rp "Link Number 3: " link3
-                    curl -O "$link3"
-                    read -rp "Link Number 4: " link4
-                    curl -O "$link4"
-                    read -rp "Link Number 5: " link5
-                    curl -O "$link5"
-                    cd ..
-                    ;;
-            esac  
-        fi
-
-        echo Creating EULA file..
-        sleep 2
-        touch eula.txt
-        echo Accepting EULA File..
-        sleep 2
-        printf "eula=true" >> eula.txt
-
-        read -rp "Do you have a premade world? (y,n) " pmworld
-        if [ "$pmworld" = y ] ;then
-            read -rp "Enter path to folder from /:" ptworldfolder
-            cp -r "$ptworldfolder" "$serverpath"/Survival/world
-        fi        
-
-        read -rp "Start Server? (y,n) " sserverstart
-        if [ "$sserverstart" = y ] ;then
-            tmux new-session -d -s survival 'java -jar server.jar'
-            echo Tmux session started with name survival
-        fi
-    fi
-
-    if [ "$servertype" = 2 ] ;then
-        echo Creating Creative Server...
-        echo !Port Will Be 25566!
-        mkdir "$serverpath"/Creative
-        cd "$serverpath"/Creative || exit
-        echo What Server Base?
-        echo 1. Vanilla
-        echo 2. Paper
-
-        read -rp "Server Base: " serverbase
-
-        if [ "$serverbase" = 1 ] ;then
-            curl -o server.jar https://piston-data.mojang.com/v1/objects/59353fb40c36d304f2035d51e7d6e6baa98dc05c/server.jar
-            curl -o server.properties https://raw.githubusercontent.com/Raktbastr/Server-Configs/refs/heads/main/creativeserver.properties
-        fi
-        if [ "$serverbase" = 2 ] ;then
-            curl -o server.jar https://api.papermc.io/v2/projects/paper/versions/1.21.1/builds/119/downloads/paper-1.21.1-119.jar
-            curl -o server.properties https://raw.githubusercontent.com/Raktbastr/Server-Configs/refs/heads/main/papercreativeserver.properties
-            read -rp "How many plugins do you want to add? (0-5)" pluginnumber
-            case $pluginnumber in
-                0)
-                    echo '0 plugins selected!'
-                    ;;
-                1)
-                    mkdir ./plugins
-                    cd ./plugins || exit
-                    read -rp "Link Number 1: " link1
-                    curl -O "$link1"
-                    cd ..
-                    ;;
-                2)
-                    mkdir ./plugins
-                    cd ./plugins || exit
-                    read -rp "Link Number 1: " link1
-                    curl -O "$link1"
-                    read -rp "Link Number 2: " link2
-                    curl -O "$link2"
-                    cd ..
-                    ;;
-                3)
-                    mkdir ./plugins
-                    cd ./plugins || exit
-                    read -rp "Link Number 1: " link1
-                    curl -O "$link1"
-                    read -rp "Link Number 2: " link2
-                    curl -O "$link2"
-                    read -rp "Link Number 3: " link3
-                    curl -O "$link3"
-                    cd ..
-                    ;;
-                4)
-                    mkdir ./plugins
-                    cd ./plugins || exit
-                    read -rp "Link Number 1: " link1
-                    curl -O "$link1"
-                    read -rp "Link Number 2: " link2
-                    curl -O "$link2"
-                    read -rp "Link Number 3: " link3
-                    curl -O "$link3"
-                    read -rp "Link Number 4: " link4
-                    curl -O "$link4"
-                    cd ..
-                    ;;
-                5)
-                    mkdir ./plugins
-                    cd ./plugins || exit
-                    read -rp "Link Number 1: " link1
-                    curl -O "$link1"
-                    read -rp "Link Number 2: " link2
-                    curl -O "$link2"
-                    read -rp "Link Number 3: " link3
-                    curl -O "$link3"
-                    read -rp "Link Number 4: " link4
-                    curl -O "$link4"
-                    read -rp "Link Number 5: " link5
-                    curl -O "$link5"
-                    cd ..
-                    ;;
-            esac
-        fi
-        
-        echo Creating EULA file..
-        sleep 2
-        touch eula.txt
-        echo Accepting EULA File..
-        sleep 2
-        printf "eula=true" >> eula.txt
-
-        read -rp "Do you have a premade world? (y,n) " pmworld
-        if [ "$pmworld" = y ] ;then
-            read -rp "Enter path to folder from /:" ptworldfolder
-            cp -r "$ptworldfolder" "$serverpath"/Creative/world
-        fi
-
-        read -rp "Start Server? (y,n) " cserverstart
-        if [ "$cserverstart" = y ] ;then
-            tmux new-session -d -s creative 'java -jar server.jar'
-            echo Tmux session started with name creative
-        fi
-    fi
-
-    # shellcheck disable=SC2046
-    if [ $(id -u) -eq 0 ] ;then 
-        sudo chown -R "$specuser" "$serverpath"
-    fi
-
-    echo '***************'
-    echo Server Created!
-    echo '***************'
 fi
 
 if [ "$unameOut" = Darwin ] ;then
-
+    homedir=users
     read -rp "Do you want this script to install java? (y,n) " installjava
 
     if [ "$installjava" = y ] ;then
@@ -308,254 +68,159 @@ if [ "$unameOut" = Darwin ] ;then
             cd /users/"$specuser"/Downloads || exit
             curl -O https://download.oracle.com/java/21/archive/jdk-21.0.3_macos-x64_bin.dmg
             echo -e "\e[1;34mDownloading Done!.\e[0m"
+            open ~/Downloads
+        fi
+
+        if [ "$intelorarm" = i ] ;then
+            cd /users/"$specuser"/Downloads || exit
+            curl -O https://download.oracle.com/java/21/archive/jdk-21.0.3_macos-aarch64_bin.dmg
+            echo -e "\e[1;34mDownloading Done!.\e[0m"
+            open ~/Downloads
         fi
     fi
-    if [ "$intelorarm" = i ] ;then
-        cd /users/"$specuser"/Downloads || exit
-        curl -O https://download.oracle.com/java/21/archive/jdk-21.0.3_macos-aarch64_bin.dmg
-        echo -e "\e[1;34mDownloading Done!.\e[0m"
-    fi
-
-    echo Where would you like to create server folder?
-    echo 1. Home Directory
-    echo 2. Documents Directory
-    echo 3. Custom path from /
-
-    read -rp "Server Folder Directory: " serverdirectory
-
-    if [ "$serverdirectory" = 1 ] ;then
-        cd /users/"$specuser" || exit
-        mkdir ./ServerFiles
-        serverpath=/home/$specuser/ServerFiles
-        cd "$serverpath" || exit
-    fi
-    if [ "$serverdirectory" = 2 ] ;then
-        cd /users/"$specuser"/Documents || exit
-        mkdir ./ServerFiles
-        serverpath=/users/$specuser/Documents/ServerFiles
-        cd "$serverpath" || exit
-    fi
-    if [ "$serverdirectory" = 3 ] ;then
-        read -rp "Input Path: " custompath
-        cd "$custompath" || exit
-        mkdir ./ServerFiles
-        serverpath=$custompath/ServerFiles
-        cd "$serverpath" || exit
-    fi
-
-    echo What Kind of Server Would You Like?
-    echo 1. Survival
-    echo 2. Creative
-
-    read -rp "Type of Server: " servertype
-
-    if [ "$servertype" = 1 ] ;then
-        echo Creating Survival Server...
-        echo !Port Will Be 25565!
-        mkdir "$serverpath"/Survival
-        cd "$serverpath"/Survival || exit
-        echo What Server Base?
-        echo 1. Vanilla
-        echo 2. Paper
-
-        read -rp "Server Base: " serverbase
-
-        if [ "$serverbase" = 1 ] ;then
-            curl -o server.jar https://piston-data.mojang.com/v1/objects/59353fb40c36d304f2035d51e7d6e6baa98dc05c/server.jar
-            curl -o server.properties https://raw.githubusercontent.com/Raktbastr/Server-Configs/refs/heads/main/survivalserver.properties
-        fi
-        if [ "$serverbase" = 2 ] ;then
-            curl -o server.jar https://api.papermc.io/v2/projects/paper/versions/1.21.1/builds/119/downloads/paper-1.21.1-119.jar
-            curl -o server.properties https://raw.githubusercontent.com/Raktbastr/Server-Configs/refs/heads/main/papersurvivalserver.properties
-            read -rp "How many plugins do you want to add? (0-5)" pluginnumber
-            case $pluginnumber in
-                0)
-                    echo '0 plugins selected!'
-                    ;;
-                1)
-                    mkdir ./plugins
-                    cd ./plugins || exit
-                    read -rp "Link Number 1: " link1
-                    curl -O "$link1"
-                    cd ..
-                    ;;
-                2)
-                    mkdir ./plugins
-                    cd ./plugins || exit
-                    read -rp "Link Number 1: " link1
-                    curl -O "$link1"
-                    read -rp "Link Number 2: " link2
-                    curl -O "$link2"
-                    cd ..
-                    ;;
-                3)
-                    mkdir ./plugins
-                    cd ./plugins || exit
-                    read -rp "Link Number 1: " link1
-                    curl -O "$link1"
-                    read -rp "Link Number 2: " link2
-                    curl -O "$link2"
-                    read -rp "Link Number 3: " link3
-                    curl -O "$link3"
-                    cd ..
-                    ;;
-                4)
-                    mkdir ./plugins
-                    cd ./plugins || exit
-                    read -rp "Link Number 1: " link1
-                    curl -O "$link1"
-                    read -rp "Link Number 2: " link2
-                    curl -O "$link2"
-                    read -rp "Link Number 3: " link3
-                    curl -O "$link3"
-                    read -rp "Link Number 4: " link4
-                    curl -O "$link4"
-                    cd ..
-                    ;;
-                5)
-                    mkdir ./plugins
-                    cd ./plugins || exit
-                    read -rp "Link Number 1: " link1
-                    curl -O "$link1"
-                    read -rp "Link Number 2: " link2
-                    curl -O "$link2"
-                    read -rp "Link Number 3: " link3
-                    curl -O "$link3"
-                    read -rp "Link Number 4: " link4
-                    curl -O "$link4"
-                    read -rp "Link Number 5: " link5
-                    curl -O "$link5"
-                    cd ..
-                    ;;
-            esac
-        fi
-
-        curl -o server.properties https://raw.githubusercontent.com/Raktbastr/Server-Configs/refs/heads/main/survivalserver.properties
-
-        echo Creating EULA file..
-        sleep 2
-        touch eula.txt
-        echo Accepting EULA File..
-        sleep 2
-        printf "eula=true" >> eula.txt
-
-        read -rp "Do you have a premade world? (y,n) " pmworld
-        if [ "$pmworld" = y ] ;then
-            read -rp "Enter path to folder from /:" ptworldfolder
-            cp -r "$ptworldfolder" "$serverpath"/Survival/world
-        fi
-
-        read -rp "Start Server? (y,n) " sserverstart
-        if [ "$sserverstart" = y ] ;then
-            tmux new-session -d -s survival 'java -jar server.jar'
-            echo Tmux session started with name survival
-        fi
-    fi
-
-    if [ "$servertype" = 2 ] ;then
-        echo Creating Creative Server...
-        echo !Port Will Be 25566!
-        mkdir "$serverpath"/Creative
-        cd "$serverpath"/Creative || exit
-        echo What Server Base?
-        echo 1. Vanilla
-        echo 2. Paper
-
-        read -rp "Server Base: " serverbase
-
-        if [ "$serverbase" = 1 ] ;then
-            curl -o server.jar https://piston-data.mojang.com/v1/objects/59353fb40c36d304f2035d51e7d6e6baa98dc05c/server.jar
-            curl -o server.properties https://raw.githubusercontent.com/Raktbastr/Server-Configs/refs/heads/main/creativeserver.properties
-        fi
-        if [ "$serverbase" = 2 ] ;then
-            curl -o server.jar https://api.papermc.io/v2/projects/paper/versions/1.21.1/builds/119/downloads/paper-1.21.1-119.jar
-            curl -o server.properties https://raw.githubusercontent.com/Raktbastr/Server-Configs/refs/heads/main/papercreativeserver.properties
-            read -rp "How many plugins do you want to add? (0-5)" pluginnumber
-            case $pluginnumber in
-                0)
-                    echo '0 plugins selected!'
-                    ;;
-                1)
-                    mkdir ./plugins
-                    cd ./plugins || exit
-                    read -rp "Link Number 1: " link1
-                    curl -O "$link1"
-                    cd ..
-                    ;;
-                2)
-                    mkdir ./plugins
-                    cd ./plugins || exit
-                    read -rp "Link Number 1: " link1
-                    curl -O "$link1"
-                    read -rp "Link Number 2: " link2
-                    curl -O "$link2"
-                    cd ..
-                    ;;
-                3)
-                    mkdir ./plugins
-                    # Five. Hundred. Lines.
-                    cd ./plugins || exit
-                    read -rp "Link Number 1: " link1
-                    curl -O "$link1"
-                    read -rp "Link Number 2: " link2
-                    curl -O "$link2"
-                    read -rp "Link Number 3: " link3
-                    curl -O "$link3"
-                    cd ..
-                    ;;
-                4)
-                    mkdir ./plugins
-                    cd ./plugins || exit
-                    read -rp "Link Number 1: " link1
-                    curl -O "$link1"
-                    read -rp "Link Number 2: " link2
-                    curl -O "$link2"
-                    read -rp "Link Number 3: " link3
-                    curl -O "$link3"
-                    read -rp "Link Number 4: " link4
-                    curl -O "$link4"
-                    cd ..
-                    ;;
-                5)
-                    mkdir ./plugins
-                    cd ./plugins || exit
-                    read -rp "Link Number 1: " link1
-                    curl -O "$link1"
-                    read -rp "Link Number 2: " link2
-                    curl -O "$link2"
-                    read -rp "Link Number 3: " link3
-                    curl -O "$link3"
-                    read -rp "Link Number 4: " link4
-                    curl -O "$link4"
-                    read -rp "Link Number 5: " link5
-                    curl -O "$link5"
-                    cd ..
-                    ;;
-            esac
-        fi
-        
-        echo Creating EULA file..
-        sleep 2
-        touch eula.txt
-        echo Accepting EULA File..
-        sleep 2
-        printf "eula=true" >> eula.txt
-
-        read -rp "Do you have a premade world? (y,n) " pmworld
-        if [ "$pmworld" = y ] ;then
-            read -rp "Enter path to folder from /:" ptworldfolder
-            cp -r "$ptworldfolder" "$serverpath"/Creative/world
-        fi
-
-        read -rp "Start Server? (y,n) " cserverstart
-        if [ "$cserverstart" = y ] ;then
-            tmux new-session -d -s creative 'java -jar server.jar'
-            echo Tmux session started with name creative
-        fi
-    fi
-    
-    echo '***************'
-    echo Server Created!
-    echo '***************'
-
 fi
+
+echo Where would you like to create server folder?
+echo 1. Home Directory
+echo 2. Documents Directory
+echo 3. Custom path from /
+
+read -rp "Server Folder Directory: " serverdirectory
+
+if [ "$serverdirectory" = 1 ] ;then
+    cd /"$homedir"/"$specuser" || exit
+    mkdir ./ServerFiles
+    serverpath=/home/$specuser/ServerFiles
+    cd "$serverpath" || exit
+fi
+if [ "$serverdirectory" = 2 ] ;then
+    cd /"$homedir"/"$specuser"/Documents || exit
+    mkdir ./ServerFiles
+    serverpath=/home/$specuser/Documents/ServerFiles
+    cd "$serverpath" || exit
+fi
+if [ "$serverdirectory" = 3 ] ;then
+    read -rp "Input Path: " custompath
+    cd "$custompath" || exit
+    mkdir ./ServerFiles
+    serverpath=$custompath/ServerFiles
+    cd "$serverpath" || exit
+fi
+
+echo What Server Type?
+echo 1. Survival
+echo 2. Creative
+
+read -rp "Server Type: " servertype
+if [ "$servertype" = 1 ] ;then
+    type=survival
+fi
+
+if [ "$servertype" = 2 ] ;then
+    type=creative
+fi
+
+echo What Server Base?
+echo 1. Vanilla
+echo 2. Paper
+
+read -rp "Server Base: " serverbase
+if [ "$serverbase" = 1 ] ;then
+    curl -o server.jar https://piston-data.mojang.com/v1/objects/59353fb40c36d304f2035d51e7d6e6baa98dc05c/server.jar
+    curl -o server.properties https://raw.githubusercontent.com/Raktbastr/Server-Configs/refs/heads/main/"$type"server.properties
+fi
+
+if [ "$serverbase" = 2 ] ;then
+    curl -o server.jar https://api.papermc.io/v2/projects/paper/versions/1.21.1/builds/119/downloads/paper-1.21.1-119.jar
+    curl -o server.properties https://raw.githubusercontent.com/Raktbastr/Server-Configs/refs/heads/main/paper"$type"server.properties
+    mkdir ./plugins
+    cd ./plugins || exit
+    read -rp "How many plugins do you want to add? (0-5)" pluginnumber
+        case $pluginnumber in
+        0)
+            echo '0 plugins selected!'
+            ;;
+        1)
+            mkdir ./plugins
+            cd ./plugins || exit
+            read -rp "Link Number 1: " link1
+            curl -O "$link1"
+            cd ..
+            ;;
+        2)
+            mkdir ./plugins
+            cd ./plugins || exit
+            read -rp "Link Number 1: " link1
+            curl -O "$link1"
+            read -rp "Link Number 2: " link2
+            curl -O "$link2"
+            cd ..
+            ;;
+        3)
+            mkdir ./plugins
+            cd ./plugins || exit
+            read -rp "Link Number 1: " link1
+            curl -O "$link1"
+            read -rp "Link Number 2: " link2
+            curl -O "$link2"
+            read -rp "Link Number 3: " link3
+            curl -O "$link3"
+            cd ..
+            ;;
+        4)
+            mkdir ./plugins
+            cd ./plugins || exit
+            read -rp "Link Number 1: " link1
+            curl -O "$link1"
+            read -rp "Link Number 2: " link2
+            curl -O "$link2"
+            read -rp "Link Number 3: " link3
+            curl -O "$link3"
+            read -rp "Link Number 4: " link4
+            curl -O "$link4"
+            cd ..
+            ;;
+        5)
+            mkdir ./plugins
+            cd ./plugins || exit
+            read -rp "Link Number 1: " link1
+            curl -O "$link1"
+            read -rp "Link Number 2: " link2
+            curl -O "$link2"
+            read -rp "Link Number 3: " link3
+            curl -O "$link3"
+            read -rp "Link Number 4: " link4
+            curl -O "$link4"
+            read -rp "Link Number 5: " link5
+            curl -O "$link5"
+            cd ..
+            ;;
+    esac
+fi
+
+echo Creating EULA file..
+sleep 2
+touch eula.txt
+echo Accepting EULA File..
+sleep 2
+printf "eula=true" >> eula.txt
+
+read -rp "Do you have a premade world? (y,n) " pmworld
+if [ "$pmworld" = y ] ;then
+    read -rp "Enter path to folder from /:" ptworldfolder
+    cp -r "$ptworldfolder" "$serverpath"/Survival/world
+fi
+
+read -rp "Start Server? (y,n) " sserverstart
+if [ "$sserverstart" = y ] ;then
+    tmux new-session -d -s survival 'java -jar server.jar'
+    echo Tmux session started with name survival
+fi
+
+# shellcheck disable=SC2046
+if [ $(id -u) -eq 0 ] ;then 
+    sudo chown -R "$specuser" "$serverpath"
+fi
+echo '***************'
+echo Server Created!
+echo '***************'
