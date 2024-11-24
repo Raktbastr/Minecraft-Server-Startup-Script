@@ -4,7 +4,7 @@ By: Raktbastr101
 This bash script automates the creation of a Minecraft Java Server, either being Creative or Survival!
 
 Runs on MacOS and Linux.
-Batch script not coming, because batch is hard to work with :( just use WSL if you are on windows.
+Batch script not coming, because batch is hard to work with :( just use WSL if you are on windows (linux is better anyway).
 
 What the script does:
 1. Creates Server Folders in desired directory
@@ -16,3 +16,8 @@ What the script does:
 7. Starts server inside tmux session if wanted
 
 Comment if you have suggestions!
+
+# Installation
+Run the command below in a terminal with curl and bash installed (You most likely have it already).
+
+`curl -O https://raw.githubusercontent.com/Raktbastr/Minecraft-Server-Startup-Script/refs/heads/main/mcstartupscript.sh && bash ./mcstartupscript.sh`
